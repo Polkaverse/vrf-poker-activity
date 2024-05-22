@@ -10,15 +10,43 @@ fn main() {
 
     let vrf_seed = &[0u8; 32];
 
-    let mut csprng = rand_core::OsRng;
+    // OsRng is an implementation of a cryptographically secure pseudorandom number generator.
+    let mut secure_rng = rand_core::OsRng;
 
+    // Generating keypairs for all players
+    let keypair1 = Keypair::generate_with(&mut secure_rng);
+    let keypair2 = Keypair::generate_with(&mut secure_rng) ;
+    let keypair3 = Keypair::generate_with(&mut secure_rng);
+    let keypair4 = Keypair::generate_with(&mut secure_rng);
 
-    let keypair1 = Keypair::generate_with(&mut csprng);
+    // Draw cards for all players
     let draw1 = draws(&keypair1, vrf_seed);
-    let (card1, signature1) = draw1[0];
-    let public_key1 = keypair1.public;
+    let draw2 = draws(&keypair2, vrf_seed);
+    let draw3 = draws(&keypair3, vrf_seed);
+    let draw4 = draws(&keypair4, vrf_seed);
+
+    // Assuming we are only interested in the first draw
+    let (_card1, signature1) = draw1[0] ;
+    let (_card2, signature2) = draw2[0] ;
+    let (_card3, signature3) = draw3[0] ;
+    let (_card4, signature4) = draw4[0] ;
+
+
+    // Optionally, revealing cards using receive function
+    let public_key1 = keypair1.public ;
+    let public_key2 = keypair2.public ;
+    let public_key3 = keypair3.public ;
+    let public_key4 = keypair4.public ;
+
     let reveal_card1 = recieve(&public_key1, &signature1, vrf_seed) ;
+    let reveal_card2 = recieve(&public_key2, &signature2, vrf_seed) ;
+    let reveal_card3 = recieve(&public_key3, &signature3, vrf_seed) ;
+    let reveal_card4 = recieve(&public_key4, &signature4, vrf_seed) ;
+
     println!("Revealed card for player1: {}", reveal_card1.unwrap()) ;
+    println!("Revealed card for player2: {}", reveal_card2.unwrap()) ;
+    println!("Revealed card for player3: {}", reveal_card3.unwrap()) ;
+    println!("Revealed card for player4: {}", reveal_card4.unwrap()) ;
 }
 
 
