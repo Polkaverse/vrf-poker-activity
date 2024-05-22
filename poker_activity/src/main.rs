@@ -26,11 +26,27 @@ fn main() {
     let draw4 = draws(&keypair4, vrf_seed);
 
     // Assuming we are only interested in the first draw
-    let (_card1, signature1) = draw1[0] ;
-    let (_card2, signature2) = draw2[0] ;
-    let (_card3, signature3) = draw3[0] ;
-    let (_card4, signature4) = draw4[0] ;
+    let (card1, signature1) = draw1[0] ;
+    let (card2, signature2) = draw2[0] ;
+    let (card3, signature3) = draw3[0] ;
+    let (card4, signature4) = draw4[0] ;
 
+    // Creating a vector which consist each players draw cards
+    let mut players = Vec::new() ;
+    players.push((1, card1)) ;
+    players.push((2, card2)) ;
+    players.push((3, card3)) ;
+    players.push((4, card4)) ;
+
+    let highest_drawn_card = winner(players) ;
+
+    match highest_drawn_card {
+        Some((1, _)) => println!("Player 1 wins!") ,
+        Some((2, _)) => println!("Player 2 wins!") ,
+        Some((3, _)) => println!("Player 3 wins!") ,
+        Some((4, _)) => println!("Player 4 wins!") ,
+        _ => println!("No winner"),
+    }
 
     // Optionally, revealing cards using receive function
     let public_key1 = keypair1.public ;
@@ -87,4 +103,13 @@ fn recieve(public: &PublicKey, vrf_signature: &[u8; 97], seed: &[u8; 32]) -> Opt
     let proof = VRFProof::from_bytes(&vrf_signature[32..96]).ok() ?;
     let (vrf_in_out, _) = public.vrf_verify(transcript, &vrf_pre_out, &proof).ok() ?;
     find_card(&vrf_in_out)
+}
+
+fn winner(players: Vec<(u8, u16)>) -> Option<(u8, u16)> {
+    if players.is_empty(){
+        None
+    }
+    else {
+        Some(*players.iter().max_by_key(|&(_, card)| card).unwrap())
+    }
 }
