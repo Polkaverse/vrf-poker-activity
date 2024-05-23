@@ -16,3 +16,11 @@ Card-less poker - There are no hands.
 The player with the highest VRF revealed at the end should win the game but with the usual poker bidding rules.
 
 Or we can simplify bidding etc.
+
+
+## Run the code
+
+```
+cd poker_activity
+cargo run
+```
